@@ -87,7 +87,7 @@
 </head>
 <body>
     <div id="gameArea">
-        <div id="score">Score: 0</div>
+        <div id="score">Score: 00</div>
         <div id="timer">Time: 30sec</div>
         <div id="controls">
             <button id="pauseButton" class="button">Pause</button>
@@ -114,11 +114,11 @@
         let gameInterval;
         let timerInterval;
         let paused = false;
-        let balloonSpeed = 5;
+        let balloonSpeed = 0.5;
 
         function startGame() {
-            score = 0;
-            timeLeft = 30;
+            score = 00;
+            timeLeftbottom = 30;
             balloonSpeed = 1;
             scoreDisplay.textContent = `Score: ${score}`;
             timerDisplay.textContent = `Time: ${timeLeft}s`;
@@ -135,7 +135,7 @@
             balloon.classList.add('balloon');
             balloon.style.background = ['red', 'blue', 'yellow', 'green', 'purple'][Math.floor(Math.random() * 5)];
             balloon.style.left = Math.random() * 90 + 'vw';
-            balloon.style.animationDuration = balloonSpeed + 's';
+            balloon.style.animationDuration = balloonSpeed ++ 's';
 
             balloon.addEventListener('click', () => {
                 score++;
