@@ -47,7 +47,7 @@
             z-index: 10;
         }
         #score { left: 10px; }
-        #timer { left: 150px; }
+        #timer { left: 50%; transform: translateX(-50%); }
         #controls { right: 10px; }
         .button {
             background: white;
@@ -77,8 +77,7 @@
         <div id="score">Score: 0</div>
         <div id="timer">Time: 30s</div>
         <div id="controls">
-            <button id="pauseButton" class="button">Pause</button>
-            <button id="resumeButton" class="button" disabled>Resume</button>
+            <button id="pauseResumeButton" class="button">Pause</button>
         </div>
         <div id="gameOver">
             <h1>Game Over!</h1>
@@ -91,8 +90,7 @@
         const gameArea = document.getElementById('gameArea');
         const scoreDisplay = document.getElementById('score');
         const timerDisplay = document.getElementById('timer');
-        const pauseButton = document.getElementById('pauseButton');
-        const resumeButton = document.getElementById('resumeButton');
+        const pauseResumeButton = document.getElementById('pauseResumeButton');
         const gameOverDisplay = document.getElementById('gameOver');
         const finalScoreDisplay = document.getElementById('finalScore');
 
@@ -101,18 +99,15 @@
         let gameInterval;
         let timerInterval;
         let paused = false;
-        let balloonSpeed = 5; // Default speed (medium)
+        let balloonSpeed = 1; // Default speed
 
-        function startGame(difficulty) {
-            if (difficulty === 'easy') balloonSpeed = 7;
-            if (difficulty === 'medium') balloonSpeed = 5;
-            if (difficulty === 'hard') balloonSpeed = 3;
-
+        function startGame() {
             score = 0;
             timeLeft = 30;
             scoreDisplay.textContent = `Score: ${score}`;
             timerDisplay.textContent = `Time: ${timeLeft}s`;
             gameOverDisplay.style.display = 'none';
+            pauseResumeButton.textContent = 'Pause';
 
             gameInterval = setInterval(createBalloon, 1000);
             timerInterval = setInterval(updateTimer, 1000);
@@ -151,24 +146,22 @@
             if (timeLeft <= 0) endGame();
         }
 
-        function pauseGame() {
-            paused = true;
-            clearInterval(gameInterval);
-            clearInterval(timerInterval);
-            const balloons = document.querySelectorAll('.balloon');
-            balloons.forEach(balloon => balloon.style.animationPlayState = 'paused');
-            pauseButton.disabled = true;
-            resumeButton.disabled = false;
-        }
+        function togglePauseResume() {
+            paused = !paused; // Toggle paused state
 
-        function resumeGame() {
-            paused = false;
-            gameInterval = setInterval(createBalloon, 1000);
-            timerInterval = setInterval(updateTimer, 1000);
-            const balloons = document.querySelectorAll('.balloon');
-            balloons.forEach(balloon => balloon.style.animationPlayState = 'running');
-            pauseButton.disabled = false;
-            resumeButton.disabled = true;
+            if (paused) {
+                clearInterval(gameInterval);
+                clearInterval(timerInterval);
+                const balloons = document.querySelectorAll('.balloon');
+                balloons.forEach(balloon => balloon.style.animationPlayState = 'paused');
+                pauseResumeButton.textContent = 'Resume';
+            } else {
+                gameInterval = setInterval(createBalloon, 1000);
+                timerInterval = setInterval(updateTimer, 1000);
+                const balloons = document.querySelectorAll('.balloon');
+                balloons.forEach(balloon => balloon.style.animationPlayState = 'running');
+                pauseResumeButton.textContent = 'Pause';
+            }
         }
 
         function endGame() {
@@ -180,15 +173,14 @@
 
         function restartGame() {
             gameOverDisplay.style.display = 'none';
-            startGame('medium'); // Restart with default difficulty
+            startGame();
         }
 
-        // Start the game immediately at medium difficulty
-        startGame('medium');
+        // Start the game immediately
+        startGame();
 
-        // Event listeners for pause and resume
-        pauseButton.addEventListener('click', pauseGame);
-        resumeButton.addEventListener('click', resumeGame);
+        // Event listener for the combined Pause/Resume button
+        pauseResumeButton.addEventListener('click', togglePauseResume);
     </script>
 </body>
 </html>
