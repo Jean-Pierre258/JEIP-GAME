@@ -7,14 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20;
-            padding: 05;
+            margin: 0;
+            padding: 0;
             overflow: hidden;
         }
         #gameArea {
             position: absolute;
-            top: 15;
-            left: 15;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             display: flex;
@@ -41,14 +41,27 @@
             from { transform: translateY(100%); }
             to { transform: translateY(-120%); }
         }
-        #score, #timer, #controls {
+        #score {
             position: absolute;
             top: 10px;
-            z-index: 10;
+            left: 10px;
+            font-size: 20px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
         }
-        #score { left: 10px; }
-        #timer { left: 150px; }
-        #controls { right: 10px; }
+        #timer {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 18px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+        }
+        #controls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
         .button {
             background: white;
             border: none;
@@ -75,7 +88,7 @@
 <body>
     <div id="gameArea">
         <div id="score">Score: 0</div>
-        <div id="timer">Time: 30s</div>
+        <div id="timer">Time: 30sec</div>
         <div id="controls">
             <button id="pauseButton" class="button">Pause</button>
             <button id="resumeButton" class="button" disabled>Resume</button>
@@ -101,15 +114,12 @@
         let gameInterval;
         let timerInterval;
         let paused = false;
-        let balloonSpeed = 5; // Default speed (medium)
+        let balloonSpeed = 5;
 
-        function startGame(difficulty) {
-            if (difficulty === 'easy') balloonSpeed = 7;
-            if (difficulty === 'medium') balloonSpeed = 5;
-            if (difficulty === 'hard') balloonSpeed = 3;
-
+        function startGame() {
             score = 0;
             timeLeft = 30;
+            balloonSpeed = 1;
             scoreDisplay.textContent = `Score: ${score}`;
             timerDisplay.textContent = `Time: ${timeLeft}s`;
             gameOverDisplay.style.display = 'none';
@@ -132,6 +142,7 @@
                 scoreDisplay.textContent = `Score: ${score}`;
                 timeLeft++;
                 timerDisplay.textContent = `Time: ${timeLeft}s`;
+                balloonSpeed = Math.max(1, balloonSpeed - 0.1); // Increase speed
                 balloon.remove();
             });
 
@@ -180,11 +191,11 @@
 
         function restartGame() {
             gameOverDisplay.style.display = 'none';
-            startGame('medium'); // Restart with default difficulty
+            startGame();
         }
 
-        // Start the game immediately at medium difficulty
-        startGame('medium');
+        // Start the game immediately
+        startGame();
 
         // Event listeners for pause and resume
         pauseButton.addEventListener('click', pauseGame);
